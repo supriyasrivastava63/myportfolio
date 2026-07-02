@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Good Morning Generator</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Custom CSS for enhanced beauty */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .input-field {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse-glow {
+            from { box-shadow: 0 0 20px rgba(102, 126, 234, 0.4); }
+            to { box-shadow: 0 0 30px rgba(102, 126, 234, 0.8); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fbbf24;
+            border-radius: 50%;
+            animation: sparkle 2s linear infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        
+        .preview-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .settings-toggle {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .settings-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Animated Background Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-20 floating"></div>
+        <div class="absolute top-40 right-20 w-16 h-16 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 floating" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-20 left-1/4 w-24 h-24 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full opacity-20 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-40 right-1/3 w-12 h-12 bg-gradient-to-r from-green-400 to-teal-400 rounded-full opacity-20 floating" style="animation-delay: 0.5s;"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <div class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center pulse-glow">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-white font-script">Good Morning</h1>
+                        <p class="text-sm text-white/80">Image Generator</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <div class="flex items-center space-x-2 text-white/80">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-sm">Start your day right</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                        </svg>
+                        <span class="text-xs text-white/60">Made with love</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-12 animate-fade-in">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 font-script">
+                Good Morning Generator
+            </h1>
+            <p class="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
+                Create beautiful morning messages with motivational quotes that will brighten anyone's day
+            </p>
+            <div class="mt-8 flex justify-center space-x-4">
+                <div class="w-2 h-2 bg-white/60 rounded-full animate-pulse"></div>
+                <div class="w-2 h-2 bg-white/60 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
+                <div class="w-2 h-2 bg-white/60 rounded-full animate-pulse" style="animation-delay: 0.4s;"></div>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div class="glass-card rounded-3xl p-8 mb-8 animate-slide-up">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-semibold text-white flex items-center">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Customize Your Message
+                </h2>
+                <button id="toggleSettings" class="settings-toggle">
+                    Show Settings
+                </button>
+            </div>
+            
+            <div id="settingsPanel" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-white/90">Your Name (Optional)</label>
+                    <input type="text" id="customName" placeholder="Enter your name" class="input-field w-full">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-white/90">Quote Category</label>
+                    <select id="quoteCategory" class="input-field w-full">
+                        <option value="">Random</option>
+                        <option value="positivity">Positivity</option>
+                        <option value="gratitude">Gratitude</option>
+                        <option value="productivity">Productivity</option>
+                        <option value="motivation">Motivation</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-white/90">Background Category</label>
+                    <select id="backgroundCategory" class="input-field w-full">
+                        <option value="">Random</option>
+                        <option value="nature">Nature</option>
+                        <option value="flowers">Flowers</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-6 mb-8 justify-center">
+            <button id="generateBtn" class="btn-primary flex items-center justify-center text-lg px-8 py-4">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Generate New Image
+            </button>
+            
+            <button id="downloadBtn" class="btn-secondary flex items-center justify-center text-lg px-8 py-4 hidden">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Download Image
+            </button>
+        </div>
+
+        <!-- Image Preview -->
+        <div class="glass-card rounded-3xl p-8">
+            <h3 class="text-2xl font-semibold text-white mb-6 flex items-center">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Preview
+            </h3>
+            <div class="flex justify-center">
+                <div id="previewContainer" class="preview-container w-full max-w-md h-96 rounded-2xl flex items-center justify-center relative overflow-hidden">
+                    <div class="text-center">
+                        <div class="relative">
+                            <svg class="w-16 h-16 text-white/60 mx-auto mb-6 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            <div class="sparkle" style="top: 20%; left: 30%;"></div>
+                            <div class="sparkle" style="top: 60%; right: 25%; animation-delay: 0.5s;"></div>
+                            <div class="sparkle" style="bottom: 30%; left: 40%; animation-delay: 1s;"></div>
+                        </div>
+                        <p class="text-white/80 text-lg">Generating your morning message...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="feature-card p-6 text-center">
+                <div class="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-white mb-2">Beautiful Designs</h3>
+                <p class="text-white/80">Generate stunning Good Morning images with elegant typography and beautiful backgrounds.</p>
+            </div>
+            
+            <div class="feature-card p-6 text-center">
+                <div class="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-white mb-2">Motivational Quotes</h3>
+                <p class="text-white/80">Curated collection of positive, gratitude, productivity, and motivational quotes.</p>
+            </div>
+            
+            <div class="feature-card p-6 text-center">
+                <div class="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-white mb-2">Easy Download</h3>
+                <p class="text-white/80">Download high-quality PNG images optimized for WhatsApp sharing.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 mt-20 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-4 mb-4">
+                    <svg class="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-white/60 text-sm">Good Morning Generator - Start your day with positivity</span>
+                </div>
+                
+                <div class="flex items-center justify-center space-x-4 mb-6">
+                    <div class="flex items-center space-x-2 text-white/60">
+                        <span>Made with</span>
+                        <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                        </svg>
+                        <span>for morning people</span>
+                    </div>
+                </div>
+                
+                <p class="text-xs text-white/40">© 2024 Good Morning Generator. Built with HTML, CSS, and lots of ☕</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Hidden Canvas -->
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <script>
+        // Data
+        const quotes = {
+            positivity: [
+                { text: "Every morning is a new beginning. Take a deep breath and start again.", author: "Anonymous" },
+                { text: "The sun is a daily reminder that we too can rise again from the darkness, that we too can shine our own light.", author: "S. Ajna" },
+                { text: "Good morning! May your day be filled with positive thoughts and beautiful moments.", author: "Anonymous" },
+                { text: "Wake up with determination. Go to bed with satisfaction.", author: "Anonymous" },
+                { text: "Today is a new day with new opportunities. Make it count!", author: "Anonymous" }
+            ],
+            gratitude: [
+                { text: "Gratitude turns what we have into enough.", author: "Anonymous" },
+                { text: "When you arise in the morning, think of what a precious privilege it is to be alive - to breathe, to think, to enjoy, to love.", author: "Marcus Aurelius" },
+                { text: "Thank you for this new day. Thank you for this new chance to live and love.", author: "Anonymous" },
+                { text: "The more grateful I am, the more beauty I see.", author: "Mary Davis" },
+                { text: "Gratitude is the fairest blossom which springs from the soul.", author: "Henry Ward Beecher" }
+            ],
+            productivity: [
+                { text: "The early bird catches the worm. Rise and shine!", author: "Anonymous" },
+                { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+                { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+                { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+                { text: "Productivity is never an accident. It is always the result of a commitment to excellence, intelligent planning, and focused effort.", author: "Paul J. Meyer" }
+            ],
+            motivation: [
+                { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+                { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+                { text: "Don't limit your challenges. Challenge your limits.", author: "Anonymous" },
+                { text: "What you get by achieving your goals is not as important as what you become by achieving your goals.", author: "Zig Ziglar" },
+                { text: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt" }
+            ]
+        };
+
+        const backgrounds = [
+            { name: "Sunrise Over Mountains", url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80", category: "nature" },
+            { name: "Golden Sunrise", url: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80", category: "nature" },
+            { name: "Morning Flowers", url: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80", category: "flowers" },
+            { name: "Ocean Sunrise", url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2073&q=80", category: "nature" },
+            { name: "Cherry Blossoms", url: "https://images.unsplash.com/photo-1522383225653-e1114a3f5b3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80", category: "flowers" }
+        ];
+
+        // Utility functions
+        function getRandomQuote(category = null) {
+            if (category && quotes[category]) {
+                const categoryQuotes = quotes[category];
+                return categoryQuotes[Math.floor(Math.random() * categoryQuotes.length)];
+            }
+            const allCategories = Object.keys(quotes);
+            const randomCategory = allCategories[Math.floor(Math.random() * allCategories.length)];
+            const categoryQuotes = quotes[randomCategory];
+            return categoryQuotes[Math.floor(Math.random() * categoryQuotes.length)];
+        }
+
+        function getRandomBackground(category = null) {
+            if (category) {
+                const filteredBackgrounds = backgrounds.filter(bg => bg.category === category);
+                if (filteredBackgrounds.length > 0) {
+                    return filteredBackgrounds[Math.floor(Math.random() * filteredBackgrounds.length)];
+                }
+            }
+            return backgrounds[Math.floor(Math.random() * backgrounds.length)];
+        }
+
+        // DOM elements
+        const toggleSettings = document.getElementById('toggleSettings');
+        const settingsPanel = document.getElementById('settingsPanel');
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const previewContainer = document.getElementById('previewContainer');
+        const canvas = document.getElementById('canvas');
+        const customName = document.getElementById('customName');
+        const quoteCategory = document.getElementById('quoteCategory');
+        const backgroundCategory = document.getElementById('backgroundCategory');
+
+        let currentImageData = null;
+
+        // Event listeners
+        toggleSettings.addEventListener('click', () => {
+            const isHidden = settingsPanel.classList.contains('hidden');
+            settingsPanel.classList.toggle('hidden');
+            toggleSettings.textContent = isHidden ? 'Hide Settings' : 'Show Settings';
+        });
+
+        generateBtn.addEventListener('click', generateImage);
+        downloadBtn.addEventListener('click', downloadImage);
+
+        // Generate image function
+        async function generateImage() {
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = `
+                <svg class="w-6 h-6 mr-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Generating...
+            `;
+
+            try {
+                const quote = getRandomQuote(quoteCategory.value || null);
+                const background = getRandomBackground(backgroundCategory.value || null);
+                
+                // Set canvas size for WhatsApp (9:16 aspect ratio)
+                canvas.width = 720;
+                canvas.height = 1280;
+                const ctx = canvas.getContext('2d');
+                
+                // Load background image
+                const bgImage = new Image();
+                bgImage.crossOrigin = 'anonymous';
+                
+                bgImage.onload = () => {
+                    // Draw background with overlay
+                    ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+                    
+                    // Add dark overlay for better text visibility
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Add gradient overlay
+                    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                    gradient.addColorStop(0, 'rgba(255, 165, 0, 0.2)');
+                    gradient.addColorStop(0.5, 'rgba(255, 140, 0, 0.1)');
+                    gradient.addColorStop(1, 'rgba(255, 69, 0, 0.2)');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Text styling
+                    ctx.textAlign = 'center';
+                    ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowOffsetX = 2;
+                    ctx.shadowOffsetY = 2;
+                    
+                    // Draw "Good Morning" text
+                    ctx.font = 'bold 72px "Dancing Script", cursive';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillText('Good Morning', canvas.width / 2, 300);
+                    
+                    // Add custom name if provided
+                    if (customName.value.trim()) {
+                        ctx.font = 'bold 48px "Dancing Script", cursive';
+                        ctx.fillText(customName.value, canvas.width / 2, 380);
+                    }
+                    
+                    // Draw quote
+                    ctx.font = '24px "Playfair Display", serif';
+                    ctx.fillStyle = '#ffffff';
+                    
+                    // Word wrap for quote
+                    const maxWidth = canvas.width - 80;
+                    const words = quote.text.split(' ');
+                    let line = '';
+                    let y = 500;
+                    
+                    for (let i = 0; i < words.length; i++) {
+                        const testLine = line + words[i] + ' ';
+                        const metrics = ctx.measureText(testLine);
+                        const testWidth = metrics.width;
+                        
+                        if (testWidth > maxWidth && i > 0) {
+                            ctx.fillText(line, canvas.width / 2, y);
+                            line = words[i] + ' ';
+                            y += 35;
+                        } else {
+                            line = testLine;
+                        }
+                    }
+                    ctx.fillText(line, canvas.width / 2, y);
+                    
+                    // Draw author
+                    ctx.font = 'italic 18px "Inter", sans-serif';
+                    ctx.fillStyle = '#fbbf24';
+                    ctx.fillText(`— ${quote.author}`, canvas.width / 2, y + 50);
+                    
+                    // Add decorative elements
+                    ctx.shadowBlur = 5;
+                    ctx.shadowColor = 'rgba(255, 215, 0, 0.8)';
+                    
+                    // Add sparkles
+                    for (let i = 0; i < 5; i++) {
+                        const x = 100 + (i * 120);
+                        const yPos = 200 + (i % 2 * 50);
+                        ctx.font = '24px Arial';
+                        ctx.fillStyle = '#fbbf24';
+                        ctx.fillText('✨', x, yPos);
+                    }
+                    
+                    // Convert canvas to image and display
+                    currentImageData = canvas.toDataURL('image/png');
+                    displayImage(currentImageData);
+                };
+                
+                bgImage.src = background.url;
+                
+            } catch (error) {
+                console.error('Error generating image:', error);
+                previewContainer.innerHTML = `
+                    <div class="text-center">
+                        <p class="text-red-400">Error generating image. Please try again.</p>
+                    </div>
+                `;
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = `
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    Generate New Image
+                `;
+            }
+        }
+
+        function displayImage(imageData) {
+            previewContainer.innerHTML = `
+                <div class="relative w-full h-full">
+                    <img src="${imageData}" alt="Generated Good Morning message" class="w-full h-full object-contain rounded-xl shadow-2xl">
+                </div>
+            `;
+            downloadBtn.classList.remove('hidden');
+        }
+
+        function downloadImage() {
+            if (currentImageData) {
+                const link = document.createElement('a');
+                link.download = `good-morning-${new Date().toISOString().split('T')[0]}.png`;
+                link.href = currentImageData;
+                link.click();
+            }
+        }
+
+        // Generate initial image on page load
+        window.addEventListener('load', generateImage);
+    </script>
+</body>
+</html> 

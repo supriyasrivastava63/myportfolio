@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥚 Egg Timer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #FFFBF0 0%, #F8F9FA 100%);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+        }
+
+        /* Enhanced Background Elements */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-egg {
+            position: absolute;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            opacity: 0.08;
+            animation: float 8s ease-in-out infinite;
+            filter: blur(0.5px);
+        }
+
+        .floating-egg:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-egg:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
+        .floating-egg:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .floating-egg:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 1s; }
+        .floating-egg:nth-child(5) { top: 50%; left: 5%; animation-delay: 3s; }
+        .floating-egg:nth-child(6) { top: 60%; right: 5%; animation-delay: 5s; }
+        .floating-egg:nth-child(7) { top: 15%; left: 50%; animation-delay: 1.5s; }
+        .floating-egg:nth-child(8) { bottom: 40%; right: 30%; animation-delay: 3.5s; }
+        .floating-egg:nth-child(9) { top: 70%; left: 25%; animation-delay: 2.5s; }
+        .floating-egg:nth-child(10) { bottom: 10%; left: 60%; animation-delay: 4.5s; }
+
+        /* Kitchen-themed background elements */
+        .kitchen-element {
+            position: absolute;
+            opacity: 0.04;
+            animation: kitchenFloat 12s ease-in-out infinite;
+        }
+
+        .kitchen-element:nth-child(1) { top: 5%; left: 5%; font-size: 2rem; animation-delay: 0s; }
+        .kitchen-element:nth-child(2) { top: 25%; right: 8%; font-size: 1.5rem; animation-delay: 3s; }
+        .kitchen-element:nth-child(3) { bottom: 15%; left: 8%; font-size: 1.8rem; animation-delay: 6s; }
+        .kitchen-element:nth-child(4) { top: 35%; left: 15%; font-size: 1.3rem; animation-delay: 9s; }
+        .kitchen-element:nth-child(5) { bottom: 25%; right: 20%; font-size: 1.6rem; animation-delay: 1.5s; }
+        .kitchen-element:nth-child(6) { top: 45%; left: 80%; font-size: 1.4rem; animation-delay: 4.5s; }
+        .kitchen-element:nth-child(7) { bottom: 35%; left: 70%; font-size: 1.7rem; animation-delay: 7.5s; }
+        .kitchen-element:nth-child(8) { top: 75%; right: 25%; font-size: 1.2rem; animation-delay: 10.5s; }
+
+        /* Additional decorative elements */
+        .decorative-element {
+            position: absolute;
+            opacity: 0.02;
+            animation: decorativeFloat 15s ease-in-out infinite;
+        }
+
+        .decorative-element:nth-child(1) { top: 10%; left: 30%; font-size: 1.8rem; animation-delay: 2s; }
+        .decorative-element:nth-child(2) { top: 60%; left: 10%; font-size: 1.5rem; animation-delay: 5s; }
+        .decorative-element:nth-child(3) { bottom: 45%; right: 10%; font-size: 1.6rem; animation-delay: 8s; }
+        .decorative-element:nth-child(4) { top: 80%; left: 50%; font-size: 1.3rem; animation-delay: 11s; }
+        .decorative-element:nth-child(5) { top: 30%; left: 60%; font-size: 1.4rem; animation-delay: 3.5s; }
+
+        @keyframes decorativeFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+                opacity: 0.02;
+            }
+            25% {
+                transform: translateY(-12px) rotate(3deg) scale(1.05);
+                opacity: 0.03;
+            }
+            50% {
+                transform: translateY(-6px) rotate(-2deg) scale(0.95);
+                opacity: 0.025;
+            }
+            75% {
+                transform: translateY(-10px) rotate(1deg) scale(1.02);
+                opacity: 0.035;
+            }
+        }
+
+        /* Funny animated eggs with different sizes */
+        .funny-egg {
+            position: absolute;
+            opacity: 0.08;
+            animation: funnyEggBounce 4s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .funny-egg.small {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .funny-egg.medium {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        .funny-egg.large {
+            font-size: clamp(2rem, 4vw, 3rem);
+        }
+
+        .funny-egg:nth-child(1) { top: 15%; left: 15%; animation-delay: 0s; }
+        .funny-egg:nth-child(2) { top: 25%; right: 20%; animation-delay: 1s; }
+        .funny-egg:nth-child(3) { bottom: 35%; left: 25%; animation-delay: 2s; }
+        .funny-egg:nth-child(4) { bottom: 25%; right: 15%; animation-delay: 3s; }
+        .funny-egg:nth-child(5) { top: 55%; left: 10%; animation-delay: 0.5s; }
+        .funny-egg:nth-child(6) { top: 65%; right: 10%; animation-delay: 1.5s; }
+        .funny-egg:nth-child(7) { top: 35%; left: 45%; animation-delay: 2.5s; }
+        .funny-egg:nth-child(8) { bottom: 45%; left: 60%; animation-delay: 1.8s; }
+
+        @keyframes funnyEggBounce {
+            0%, 100% {
+                transform: translateY(0px) scale(1);
+                content: "🥚";
+            }
+            25% {
+                transform: translateY(-20px) scale(1.1);
+                content: "🥚";
+            }
+            50% {
+                transform: translateY(-10px) scale(0.9);
+                content: "🥚";
+            }
+            75% {
+                transform: translateY(-15px) scale(1.05);
+                content: "🥚";
+            }
+        }
+
+        /* Cracking egg animation */
+        .funny-egg.cracking {
+            animation: eggCrack 2s ease-in-out forwards;
+        }
+
+        @keyframes eggCrack {
+            0% {
+                transform: translateY(0px) scale(1);
+                content: "🥚";
+            }
+            25% {
+                transform: translateY(-15px) scale(1.2);
+                content: "🥚";
+            }
+            50% {
+                transform: translateY(-10px) scale(1.1);
+                content: "🥚";
+            }
+            75% {
+                transform: translateY(-5px) scale(1.05);
+                content: "🥚";
+            }
+            100% {
+                transform: translateY(0px) scale(1);
+                content: "🥚";
+            }
+        }
+
+        /* Crying egg animation */
+        .funny-egg.crying {
+            animation: eggCry 3s ease-in-out infinite;
+        }
+
+        @keyframes eggCry {
+            0%, 100% {
+                transform: translateY(0px) scale(1);
+                content: "🥚";
+            }
+            25% {
+                transform: translateY(-10px) scale(1.05);
+                content: "🥚";
+            }
+            50% {
+                transform: translateY(-5px) scale(0.95);
+                content: "🥚";
+            }
+            75% {
+                transform: translateY(-8px) scale(1.02);
+                content: "🥚";
+            }
+        }
+
+        /* Dancing egg animation */
+        .funny-egg.dancing {
+            animation: eggDance 2s ease-in-out infinite;
+        }
+
+        @keyframes eggDance {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-15px) rotate(15deg) scale(1.1);
+            }
+            50% {
+                transform: translateY(-8px) rotate(-10deg) scale(0.95);
+            }
+            75% {
+                transform: translateY(-12px) rotate(8deg) scale(1.05);
+            }
+        }
+
+        /* Laughing egg animation */
+        .funny-egg.laughing {
+            animation: eggLaugh 2.5s ease-in-out infinite;
+        }
+
+        @keyframes eggLaugh {
+            0%, 100% {
+                transform: translateY(0px) scale(1);
+            }
+            20% {
+                transform: translateY(-8px) scale(1.05);
+            }
+            40% {
+                transform: translateY(-4px) scale(0.98);
+            }
+            60% {
+                transform: translateY(-10px) scale(1.08);
+            }
+            80% {
+                transform: translateY(-6px) scale(1.02);
+            }
+        }
+
+        /* Egg states */
+        .funny-egg.cracked::before {
+            content: "🥚";
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: crackEffect 1s ease-in-out forwards;
+        }
+
+        .funny-egg.crying::before {
+            content: "🥚";
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: cryEffect 2s ease-in-out infinite;
+        }
+
+        @keyframes crackEffect {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes cryEffect {
+            0%, 100% {
+                transform: translateY(0px);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-5px);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes kitchenFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.03;
+            }
+            25% {
+                transform: translateY(-15px) rotate(2deg);
+                opacity: 0.05;
+            }
+            50% {
+                transform: translateY(-8px) rotate(-1deg);
+                opacity: 0.04;
+            }
+            75% {
+                transform: translateY(-12px) rotate(1deg);
+                opacity: 0.06;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+                opacity: 0.08;
+            }
+            25% {
+                transform: translateY(-25px) rotate(3deg) scale(1.05);
+                opacity: 0.12;
+            }
+            50% {
+                transform: translateY(-15px) rotate(-2deg) scale(0.95);
+                opacity: 0.15;
+            }
+            75% {
+                transform: translateY(-20px) rotate(1deg) scale(1.02);
+                opacity: 0.12;
+            }
+        }
+
+        /* Enhanced Gradient Animation */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #FFD93D, #FF6B35, #FF4B4B, #FFD93D, #FFB74D, #FFD93D);
+            background-size: 500% 500%;
+            animation: gradientShift 25s ease infinite;
+            opacity: 0.04;
+            z-index: -2;
+        }
+
+        body.dark-mode .gradient-bg {
+            opacity: 0.1;
+        }
+
+        /* Additional background patterns */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 215, 61, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 183, 77, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -3;
+        }
+
+        /* Background image elements */
+        .bg-image {
+            position: absolute;
+            opacity: 0.25;
+            pointer-events: none;
+            animation: bgFloat 15s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(255, 215, 61, 0.3));
+        }
+
+        .bg-image:nth-child(1) { top: 10%; left: 5%; font-size: 4rem; animation-delay: 0s; }
+        .bg-image:nth-child(2) { top: 30%; right: 10%; font-size: 3.5rem; animation-delay: 3s; }
+        .bg-image:nth-child(3) { bottom: 20%; left: 15%; font-size: 3rem; animation-delay: 6s; }
+        .bg-image:nth-child(4) { bottom: 40%; right: 20%; font-size: 4.5rem; animation-delay: 9s; }
+        .bg-image:nth-child(5) { top: 50%; left: 25%; font-size: 3.8rem; animation-delay: 12s; }
+        .bg-image:nth-child(6) { top: 70%; right: 15%; font-size: 3.2rem; animation-delay: 15s; }
+        .bg-image:nth-child(7) { bottom: 10%; left: 60%; font-size: 4.2rem; animation-delay: 2s; }
+        .bg-image:nth-child(8) { top: 20%; left: 70%; font-size: 3.7rem; animation-delay: 5s; }
+        .bg-image:nth-child(9) { top: 40%; left: 80%; font-size: 3.3rem; animation-delay: 8s; }
+        .bg-image:nth-child(10) { bottom: 30%; right: 5%; font-size: 4rem; animation-delay: 11s; }
+        .bg-image:nth-child(11) { top: 80%; left: 40%; font-size: 3.5rem; animation-delay: 14s; }
+        .bg-image:nth-child(12) { bottom: 60%; right: 35%; font-size: 3.8rem; animation-delay: 17s; }
+
+        @keyframes bgFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+                opacity: 0.25;
+            }
+            25% {
+                transform: translateY(-30px) rotate(15deg) scale(1.15);
+                opacity: 0.35;
+            }
+            50% {
+                transform: translateY(-15px) rotate(-8deg) scale(0.9);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(-25px) rotate(10deg) scale(1.08);
+                opacity: 0.4;
+            }
+        }
+
+        /* Colorful animated elements */
+        .colorful-element {
+            position: absolute;
+            opacity: 0.2;
+            pointer-events: none;
+            animation: colorfulFloat 12s ease-in-out infinite;
+            filter: drop-shadow(0 6px 12px rgba(255, 107, 53, 0.4));
+        }
+
+        .colorful-element:nth-child(1) { top: 15%; left: 20%; font-size: 2.5rem; animation-delay: 0s; }
+        .colorful-element:nth-child(2) { top: 45%; right: 25%; font-size: 3rem; animation-delay: 4s; }
+        .colorful-element:nth-child(3) { bottom: 25%; left: 30%; font-size: 2.8rem; animation-delay: 8s; }
+        .colorful-element:nth-child(4) { bottom: 55%; right: 15%; font-size: 2.2rem; animation-delay: 2s; }
+        .colorful-element:nth-child(5) { top: 75%; left: 50%; font-size: 3.2rem; animation-delay: 6s; }
+
+        @keyframes colorfulFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+                opacity: 0.2;
+            }
+            25% {
+                transform: translateY(-25px) rotate(20deg) scale(1.2);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-12px) rotate(-12deg) scale(0.85);
+                opacity: 0.25;
+            }
+            75% {
+                transform: translateY(-20px) rotate(15deg) scale(1.1);
+                opacity: 0.35;
+            }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Enhanced Particle Effect */
+        .particle {
+            position: absolute;
+            width: clamp(3px, 0.5vw, 6px);
+            height: clamp(3px, 0.5vw, 6px);
+            background: linear-gradient(45deg, #FFD93D, #FFB74D);
+            border-radius: 50%;
+            animation: particleFloat 10s linear infinite;
+            opacity: 0.2;
+            box-shadow: 0 0 8px rgba(255, 217, 61, 0.3);
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 1.5s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 3s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 4.5s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 6s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 7.5s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 9s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 10.5s; }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.2;
+            }
+            90% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(-100px) scale(1) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .dark-toggle {
+            padding: 0.75rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.2rem;
+        }
+
+        .dark-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .egg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .egg-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .dark-mode .egg-card {
+            background: #2d2d2d;
+            border-color: #404040;
+        }
+
+        .egg-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .egg-icon {
+            width: 6rem;
+            height: 6rem;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            transition: transform 0.3s ease;
+        }
+
+        .egg-card:hover .egg-icon {
+            transform: scale(1.1);
+        }
+
+        .egg-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .egg-description {
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .egg-time {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: #f3f4f6;
+        }
+
+        .dark-mode .egg-time {
+            background: #404040;
+        }
+
+        .timer-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .timer-header {
+            margin-bottom: 2rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-button:hover {
+            opacity: 1;
+        }
+
+        .timer-display {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .circular-progress {
+            position: relative;
+            display: inline-block;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            transition: stroke-dashoffset 1s ease-in-out;
+        }
+
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .timer-status {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            opacity: 0.7;
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-primary {
+            background: #FFD93D;
+            color: #1f2937;
+        }
+
+        .btn-primary:hover {
+            background: #fbbf24;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .dark-mode .btn-secondary {
+            background: #404040;
+            color: #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .dark-mode .btn-secondary:hover {
+            background: #525252;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            max-width: 400px;
+            margin: 1rem;
+        }
+
+        .dark-mode .modal-content {
+            background: #2d2d2d;
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tip {
+            text-align: center;
+            font-size: 0.875rem;
+            opacity: 0.6;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .egg-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dynamic Background Elements -->
+    <div class="bg-animation">
+        <div class="bg-pattern"></div>
+        <div class="gradient-bg"></div>
+        <div class="bg-image">🥚</div>
+        <div class="bg-image">🥚</div>
+        <div class="bg-image">🥚</div>
+        <div class="bg-image">🥚</div>
+        <div class="bg-image">🥚</div>
+        <div class="bg-image">🥚</div>
+        <div class="bg-image">🥚</div>
+        <div class="bg-image">🥚</div>
+        <div class="bg-image">🥚</div>
+        <div class="bg-image">🥚</div>
+        <div class="bg-image">🥚</div>
+        <div class="bg-image">🥚</div>
+        <div class="colorful-element">🌟</div>
+        <div class="colorful-element">💫</div>
+        <div class="colorful-element">✨</div>
+        <div class="colorful-element">⭐</div>
+        <div class="colorful-element">🎨</div>
+        <div class="floating-egg">🥚</div>
+        <div class="floating-egg">🥚</div>
+        <div class="floating-egg">🥚</div>
+        <div class="floating-egg">🥚</div>
+        <div class="floating-egg">🥚</div>
+        <div class="floating-egg">🥚</div>
+        <div class="floating-egg">🥚</div>
+        <div class="floating-egg">🥚</div>
+        <div class="floating-egg">🥚</div>
+        <div class="floating-egg">🥚</div>
+        <div class="kitchen-element">🍳</div>
+        <div class="kitchen-element">🥄</div>
+        <div class="kitchen-element">🔥</div>
+        <div class="kitchen-element">⏰</div>
+        <div class="kitchen-element">☕</div>
+        <div class="kitchen-element">🥘</div>
+        <div class="kitchen-element">🍽️</div>
+        <div class="kitchen-element">🌶️</div>
+        <div class="decorative-element">✨</div>
+        <div class="decorative-element">💫</div>
+        <div class="decorative-element">🌟</div>
+        <div class="decorative-element">⭐</div>
+        <div class="decorative-element">🎨</div>
+        <div class="funny-egg small" onclick="makeEggCrack(this)">🥚</div>
+        <div class="funny-egg medium" onclick="makeEggCry(this)">🥚</div>
+        <div class="funny-egg large" onclick="makeEggDance(this)">🥚</div>
+        <div class="funny-egg small" onclick="makeEggLaugh(this)">🥚</div>
+        <div class="funny-egg medium" onclick="makeEggCrack(this)">🥚</div>
+        <div class="funny-egg large" onclick="makeEggCry(this)">🥚</div>
+        <div class="funny-egg small" onclick="makeEggDance(this)">🥚</div>
+        <div class="funny-egg medium" onclick="makeEggLaugh(this)">🥚</div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">
+                <span>🥚</span>
+                Egg Timer
+            </h1>
+            <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+        </div>
+
+        <div id="egg-selector">
+            <div class="egg-grid">
+                <div class="egg-card" onclick="selectEgg('runny')">
+                    <div class="egg-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">🥚</div>
+                    <h3 class="egg-title">Runny Egg</h3>
+                    <p class="egg-description">Soft-boiled with liquid yolk</p>
+                    <div class="egg-time">4:00</div>
+                </div>
+                <div class="egg-card" onclick="selectEgg('medium')">
+                    <div class="egg-icon" style="background: linear-gradient(135deg, #f59e0b, #dc2626);">🥚</div>
+                    <h3 class="egg-title">Medium Egg</h3>
+                    <p class="egg-description">Firm white, soft yolk</p>
+                    <div class="egg-time">6:00</div>
+                </div>
+                <div class="egg-card" onclick="selectEgg('hard')">
+                    <div class="egg-icon" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">🥚</div>
+                    <h3 class="egg-title">Hard-Boiled Egg</h3>
+                    <p class="egg-description">Fully cooked through</p>
+                    <div class="egg-time">10:00</div>
+                </div>
+            </div>
+            <div class="tip">
+                💡 Tip: Start with cold water and bring to a boil, then add your eggs!
+            </div>
+        </div>
+
+        <div id="timer-display" class="hidden">
+            <div class="timer-container">
+                <div class="timer-header">
+                    <div class="back-button" onclick="backToSelection()">← Back to Selection</div>
+                    <h2 id="selected-egg-title" class="egg-title"></h2>
+                    <p id="selected-egg-description" class="egg-description"></p>
+                </div>
+
+                <div class="timer-display">
+                    <div class="circular-progress">
+                        <svg width="300" height="300" class="progress-ring">
+                            <circle cx="150" cy="150" r="140" stroke="#e5e7eb" stroke-width="12" fill="none"></circle>
+                            <circle id="progress-circle" cx="150" cy="150" r="140" stroke="#FFD93D" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="879.6" stroke-dashoffset="879.6"></circle>
+                        </svg>
+                        <div class="timer-text" id="timer-text">4:00</div>
+                    </div>
+                    <div class="timer-status" id="timer-status"></div>
+                </div>
+
+                <div class="control-buttons">
+                    <button id="start-btn" class="btn btn-primary" onclick="startTimer()">Start Timer</button>
+                    <button id="pause-btn" class="btn btn-secondary hidden" onclick="pauseTimer()">Pause</button>
+                    <button id="resume-btn" class="btn btn-primary hidden" onclick="resumeTimer()">Resume</button>
+                    <button id="reset-btn" class="btn btn-danger hidden" onclick="resetTimer()">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="completion-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h3 id="completion-title" class="egg-title"></h3>
+            <p class="egg-description">Perfect timing! Your egg should be cooked to perfection.</p>
+            <div class="control-buttons">
+                <button class="btn btn-primary" onclick="resetTimer()">Cook Another</button>
+                <button class="btn btn-secondary" onclick="backToSelection()">Choose Different</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Egg configurations
+        const eggs = {
+            runny: { name: 'Runny Egg', description: 'Soft-boiled with liquid yolk', duration: 240, color: '#FFD93D' },
+            medium: { name: 'Medium Egg', description: 'Firm white, soft yolk', duration: 360, color: '#f59e0b' },
+            hard: { name: 'Hard-Boiled Egg', description: 'Fully cooked through', duration: 600, color: '#dc2626' }
+        };
+
+        let currentEgg = null;
+        let timerState = {
+            isRunning: false,
+            isPaused: false,
+            timeLeft: 0,
+            totalTime: 0
+        };
+        let timerInterval = null;
+
+        // Dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const toggle = document.querySelector('.dark-toggle');
+            toggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        // Load dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.dark-toggle').textContent = '☀️';
+        }
+
+        // Load last choice (commented out to always start on home page)
+        // const savedEgg = localStorage.getItem('lastEggChoice');
+        // if (savedEgg) {
+        //     selectEgg(JSON.parse(savedEgg));
+        // }
+
+        function selectEgg(eggType) {
+            currentEgg = eggType;
+            const egg = eggs[eggType];
+            
+            document.getElementById('egg-selector').classList.add('hidden');
+            document.getElementById('timer-display').classList.remove('hidden');
+            
+            document.getElementById('selected-egg-title').textContent = egg.name;
+            document.getElementById('selected-egg-description').textContent = egg.description;
+            
+            timerState = {
+                isRunning: false,
+                isPaused: false,
+                timeLeft: egg.duration,
+                totalTime: egg.duration
+            };
+            
+            updateTimerDisplay();
+            updateButtons();
+            
+            localStorage.setItem('lastEggChoice', JSON.stringify(eggType));
+        }
+
+        function backToSelection() {
+            document.getElementById('timer-display').classList.add('hidden');
+            document.getElementById('egg-selector').classList.remove('hidden');
+            document.getElementById('completion-modal').classList.add('hidden');
+            
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            
+            timerState = {
+                isRunning: false,
+                isPaused: false,
+                timeLeft: 0,
+                totalTime: 0
+            };
+        }
+
+        function startTimer() {
+            if (!currentEgg) return;
+            
+            timerState.isRunning = true;
+            timerState.isPaused = false;
+            
+            timerInterval = setInterval(() => {
+                timerState.timeLeft--;
+                updateTimerDisplay();
+                
+                if (timerState.timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    timerState.isRunning = false;
+                    showCompletion();
+                    playAlarm();
+                }
+            }, 1000);
+            
+            updateButtons();
+        }
+
+        function pauseTimer() {
+            timerState.isPaused = true;
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            updateButtons();
+        }
+
+        function resumeTimer() {
+            timerState.isPaused = false;
+            startTimer();
+        }
+
+        function resetTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            
+            const egg = eggs[currentEgg];
+            timerState = {
+                isRunning: false,
+                isPaused: false,
+                timeLeft: egg.duration,
+                totalTime: egg.duration
+            };
+            
+            updateTimerDisplay();
+            updateButtons();
+            document.getElementById('completion-modal').classList.add('hidden');
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerState.timeLeft / 60);
+            const seconds = timerState.timeLeft % 60;
+            const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            document.getElementById('timer-text').textContent = timeString;
+            
+            const progress = ((timerState.totalTime - timerState.timeLeft) / timerState.totalTime) * 100;
+            const circumference = 879.6; // 2 * π * 140
+            const offset = circumference - (progress / 100) * circumference;
+            
+            document.getElementById('progress-circle').style.strokeDashoffset = offset;
+            
+            const status = document.getElementById('timer-status');
+            if (timerState.isRunning && !timerState.isPaused) {
+                status.textContent = 'Cooking...';
+            } else if (timerState.isPaused) {
+                status.textContent = 'Paused';
+            } else {
+                status.textContent = '';
+            }
+        }
+
+        function updateButtons() {
+            const startBtn = document.getElementById('start-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            const resumeBtn = document.getElementById('resume-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            
+            if (!timerState.isRunning && timerState.timeLeft === timerState.totalTime) {
+                startBtn.classList.remove('hidden');
+                pauseBtn.classList.add('hidden');
+                resumeBtn.classList.add('hidden');
+                resetBtn.classList.add('hidden');
+            } else if (timerState.isRunning && !timerState.isPaused) {
+                startBtn.classList.add('hidden');
+                pauseBtn.classList.remove('hidden');
+                resumeBtn.classList.add('hidden');
+                resetBtn.classList.remove('hidden');
+            } else if (timerState.isPaused) {
+                startBtn.classList.add('hidden');
+                pauseBtn.classList.add('hidden');
+                resumeBtn.classList.remove('hidden');
+                resetBtn.classList.remove('hidden');
+            }
+        }
+
+        function showCompletion() {
+            const egg = eggs[currentEgg];
+            document.getElementById('completion-title').textContent = `Your ${egg.name} is Ready!`;
+            document.getElementById('completion-modal').classList.remove('hidden');
+        }
+
+        function playAlarm() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Create multiple oscillators for a richer sound
+                const frequencies = [800, 600, 1000, 400];
+                const oscillators = [];
+                const gainNodes = [];
+                
+                frequencies.forEach((freq, index) => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(freq * 0.8, audioContext.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime + 0.2);
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+                    
+                    oscillator.start(audioContext.currentTime + (index * 0.1));
+                    oscillator.stop(audioContext.currentTime + 0.8 + (index * 0.1));
+                    
+                    oscillators.push(oscillator);
+                    gainNodes.push(gainNode);
+                });
+                
+                // Add visual alarm effect
+                showAlarmEffect();
+                
+            } catch (error) {
+                console.log('Audio not supported, using fallback');
+                // Fallback: try to play a simple beep
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT');
+                audio.play().catch(() => {
+                    // If audio fails, just show visual effect
+                    showAlarmEffect();
+                });
+            }
+        }
+
+        function showAlarmEffect() {
+            // Create visual alarm effect
+            const alarmEffect = document.createElement('div');
+            alarmEffect.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+                pointer-events: none;
+                z-index: 9999;
+                animation: alarmPulse 2s ease-out forwards;
+            `;
+            
+            document.body.appendChild(alarmEffect);
+            
+            // Remove effect after animation
+            setTimeout(() => {
+                if (alarmEffect.parentNode) {
+                    alarmEffect.parentNode.removeChild(alarmEffect);
+                }
+            }, 2000);
+        }
+
+        // Add alarm pulse animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes alarmPulse {
+                0% {
+                    opacity: 0;
+                    transform: scale(0.5);
+                }
+                50% {
+                    opacity: 1;
+                    transform: scale(1.2);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(1.5);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Funny egg interaction functions
+        function makeEggCrack(eggElement) {
+            if (eggElement.classList.contains('cracking') || eggElement.classList.contains('crying')) return;
+            
+            eggElement.classList.add('cracking');
+            eggElement.textContent = '🥚';
+            
+            // Play crack sound
+            playCrackSound();
+            
+            setTimeout(() => {
+                eggElement.classList.remove('cracking');
+                eggElement.classList.add('cracked');
+                eggElement.textContent = '🥚';
+                
+                // Show crack effect
+                showCrackEffect(eggElement);
+                
+                setTimeout(() => {
+                    eggElement.classList.remove('cracked');
+                }, 2000);
+            }, 2000);
+        }
+
+        function makeEggCry(eggElement) {
+            if (eggElement.classList.contains('cracking') || eggElement.classList.contains('crying') || 
+                eggElement.classList.contains('dancing') || eggElement.classList.contains('laughing')) return;
+            
+            eggElement.classList.add('crying');
+            eggElement.textContent = '🥚';
+            
+            // Play cry sound
+            playCrySound();
+            
+            setTimeout(() => {
+                eggElement.classList.remove('crying');
+                eggElement.textContent = '🥚';
+            }, 3000);
+        }
+
+        function makeEggDance(eggElement) {
+            if (eggElement.classList.contains('cracking') || eggElement.classList.contains('crying') || 
+                eggElement.classList.contains('dancing') || eggElement.classList.contains('laughing')) return;
+            
+            eggElement.classList.add('dancing');
+            eggElement.textContent = '🥚';
+            
+            // Play dance sound
+            playDanceSound();
+            
+            setTimeout(() => {
+                eggElement.classList.remove('dancing');
+                eggElement.textContent = '🥚';
+            }, 2000);
+        }
+
+        function makeEggLaugh(eggElement) {
+            if (eggElement.classList.contains('cracking') || eggElement.classList.contains('crying') || 
+                eggElement.classList.contains('dancing') || eggElement.classList.contains('laughing')) return;
+            
+            eggElement.classList.add('laughing');
+            eggElement.textContent = '🥚';
+            
+            // Play laugh sound
+            playLaughSound();
+            
+            setTimeout(() => {
+                eggElement.classList.remove('laughing');
+                eggElement.textContent = '🥚';
+            }, 2500);
+        }
+
+        function playCrackSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(150, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(100, audioContext.currentTime + 0.2);
+                
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } catch (error) {
+                console.log('Crack sound not supported');
+            }
+        }
+
+        function playCrySound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(250, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime + 0.2);
+                oscillator.frequency.setValueAtTime(250, audioContext.currentTime + 0.3);
+                
+                gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.4);
+            } catch (error) {
+                console.log('Cry sound not supported');
+            }
+        }
+
+        function playDanceSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Upbeat dance sound
+                oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(500, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.2);
+                oscillator.frequency.setValueAtTime(500, audioContext.currentTime + 0.3);
+                oscillator.frequency.setValueAtTime(400, audioContext.currentTime + 0.4);
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (error) {
+                console.log('Dance sound not supported');
+            }
+        }
+
+        function playLaughSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Laughing sound pattern
+                oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(700, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(500, audioContext.currentTime + 0.2);
+                oscillator.frequency.setValueAtTime(650, audioContext.currentTime + 0.3);
+                oscillator.frequency.setValueAtTime(550, audioContext.currentTime + 0.4);
+                
+                gainNode.gain.setValueAtTime(0.12, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (error) {
+                console.log('Laugh sound not supported');
+            }
+        }
+
+        function showCrackEffect(eggElement) {
+            const rect = eggElement.getBoundingClientRect();
+            const crackEffect = document.createElement('div');
+            crackEffect.style.cssText = `
+                position: fixed;
+                top: ${rect.top}px;
+                left: ${rect.left}px;
+                font-size: 2rem;
+                pointer-events: none;
+                z-index: 10000;
+                animation: crackShatter 1s ease-out forwards;
+            `;
+            crackEffect.textContent = '💥';
+            
+            document.body.appendChild(crackEffect);
+            
+            setTimeout(() => {
+                if (crackEffect.parentNode) {
+                    crackEffect.parentNode.removeChild(crackEffect);
+                }
+            }, 1000);
+        }
+
+        // Add crack shatter animation
+        const crackStyle = document.createElement('style');
+        crackStyle.textContent = `
+            @keyframes crackShatter {
+                0% {
+                    opacity: 1;
+                    transform: scale(0.5) rotate(0deg);
+                }
+                50% {
+                    opacity: 1;
+                    transform: scale(1.5) rotate(180deg);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(2) rotate(360deg);
+                }
+            }
+        `;
+        document.head.appendChild(crackStyle);
+    </script>
+</body>
+</html> 
